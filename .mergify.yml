@@ -1,4 +1,4 @@
-extends: Modomutiorgb/Repob
+extends: Repob
 
 queue_rules:
   - name: default
