@@ -1,5 +1,3 @@
-extends: Repob
-
 queue_rules:
   - name: default
     conditions: []
