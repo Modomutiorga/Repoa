@@ -1,10 +1,15 @@
 name: XSS Test
 on: [push]
+
 jobs:
   xss:
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate JUnit XML with XSS payload
+        run: |
           mkdir -p test-results
           echo '<?xml version="1.0" encoding="UTF-8"?>
           <testsuites>
@@ -12,9 +17,10 @@ jobs:
               <testcase name="<img src=x onerror=alert(1)>" time="1"/>
             </testsuite>
           </testsuites>' > test-results/junit.xml
-      - uses: actions/upload-artifact@v4
-        with:
-          name: junit
-          path: test-results/junit.xml
 
-          
+      - name: Upload test report to Mergify
+        uses: mergifyio/gha-mergify-ci@v1
+        with:
+          report: test-results/junit.xml
+        env:
+          MERGIFY_TOKEN: ${{ secrets.MERGIFY_TOKEN }}
